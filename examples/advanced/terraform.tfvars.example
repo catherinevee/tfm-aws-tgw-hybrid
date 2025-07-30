@@ -1,0 +1,47 @@
+# Example terraform.tfvars for Advanced Hybrid Connectivity Setup
+
+# AWS Configuration
+aws_region = "us-west-2"
+
+# VPC Configuration
+vpc_id = "vpc-12345678"
+
+# Environment Configuration
+environment  = "prod"
+project_name = "hybrid-connectivity"
+
+# Transit Gateway Configuration
+transit_gateway_asn = 64512
+
+# Direct Connect Configuration
+enable_direct_connect = true
+direct_connect_gateway_asn = 64512
+direct_connect_allowed_prefixes = [
+  "10.0.0.0/16",
+  "172.16.0.0/12"
+]
+
+# VPN Configuration
+enable_vpn = true
+customer_gateway_bgp_asn = 65000
+customer_gateway_ip_address = "203.0.113.1"
+vpn_static_routes_only = false
+vpn_static_routes = []
+
+# VPN Preshared Keys (Replace with your actual keys)
+vpn_tunnel1_preshared_key = "your-preshared-key-1"
+vpn_tunnel2_preshared_key = "your-preshared-key-2"
+
+# VPN Logging Configuration
+enable_vpn_logging = true
+vpn_log_retention_days = 30
+
+# Route Configuration
+transit_gateway_routes = [
+  {
+    cidr_block = "10.0.0.0/16"
+  },
+  {
+    cidr_block = "172.16.0.0/12"
+  }
+] 

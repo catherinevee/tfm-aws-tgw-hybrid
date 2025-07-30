@@ -1,0 +1,11 @@
+# Example terraform.tfvars for Basic Transit Gateway Setup
+
+# AWS Configuration
+aws_region = "us-west-2"
+
+# VPC Configuration
+vpc_id = "vpc-12345678"
+
+# Environment Configuration
+environment  = "dev"
+project_name = "hybrid-connectivity" 
