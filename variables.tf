@@ -296,3 +296,305 @@ variable "transit_gateway_route_table_subnet_ids" {
   type        = list(string)
   default     = []
 } 
+
+# ==============================================================================
+# Enhanced Hybrid Connectivity Configuration Variables
+# ==============================================================================
+
+variable "hybrid_config" {
+  description = "Hybrid connectivity configuration"
+  type = object({
+    enable_transit_gateway = optional(bool, true)
+    enable_direct_connect = optional(bool, false)
+    enable_vpn_connectivity = optional(bool, true)
+    enable_customer_gateway = optional(bool, true)
+    enable_vpn_gateway = optional(bool, true)
+    enable_vpc_attachment = optional(bool, true)
+    enable_route_tables = optional(bool, true)
+    enable_route_propagation = optional(bool, true)
+    enable_route_association = optional(bool, true)
+    enable_multicast = optional(bool, false)
+    enable_dns_support = optional(bool, true)
+    enable_vpn_ecmp = optional(bool, true)
+    enable_auto_accept = optional(bool, false)
+    enable_logging = optional(bool, true)
+    enable_monitoring = optional(bool, true)
+    enable_metrics = optional(bool, true)
+    enable_alerts = optional(bool, true)
+    enable_dashboard = optional(bool, true)
+    enable_audit = optional(bool, true)
+    enable_backup = optional(bool, false)
+    enable_disaster_recovery = optional(bool, false)
+  })
+  default = {}
+}
+
+variable "transit_gateways" {
+  description = "Map of Transit Gateways to create"
+  type = map(object({
+    name = string
+    description = optional(string, null)
+    amazon_side_asn = optional(number, 64512)
+    auto_accept_shared_attachments = optional(string, "disable")
+    default_route_table_association = optional(string, "enable")
+    default_route_table_propagation = optional(string, "enable")
+    dns_support = optional(string, "enable")
+    multicast_support = optional(string, "disable")
+    vpn_ecmp_support = optional(string, "enable")
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "transit_gateway_route_tables" {
+  description = "Map of Transit Gateway Route Tables to create"
+  type = map(object({
+    transit_gateway_id = string
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "transit_gateway_route_table_associations" {
+  description = "Map of Transit Gateway Route Table Associations to create"
+  type = map(object({
+    transit_gateway_attachment_id = string
+    transit_gateway_route_table_id = string
+  }))
+  default = {}
+}
+
+variable "transit_gateway_route_table_propagations" {
+  description = "Map of Transit Gateway Route Table Propagations to create"
+  type = map(object({
+    transit_gateway_attachment_id = string
+    transit_gateway_route_table_id = string
+  }))
+  default = {}
+}
+
+variable "transit_gateway_vpc_attachments" {
+  description = "Map of Transit Gateway VPC Attachments to create"
+  type = map(object({
+    transit_gateway_id = string
+    vpc_id = string
+    subnet_ids = list(string)
+    appliance_mode_support = optional(string, "disable")
+    dns_support = optional(string, "enable")
+    ipv6_support = optional(string, "disable")
+    transit_gateway_default_route_table_association = optional(bool, true)
+    transit_gateway_default_route_table_propagation = optional(bool, true)
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "transit_gateway_peering_attachments" {
+  description = "Map of Transit Gateway Peering Attachments to create"
+  type = map(object({
+    peer_transit_gateway_id = string
+    transit_gateway_id = string
+    peer_account_id = optional(string, null)
+    peer_region = string
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "transit_gateway_peering_attachment_accepter" {
+  description = "Map of Transit Gateway Peering Attachment Accepters to create"
+  type = map(object({
+    transit_gateway_attachment_id = string
+    transit_gateway_default_route_table_association = optional(bool, true)
+    transit_gateway_default_route_table_propagation = optional(bool, true)
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "transit_gateway_routes" {
+  description = "Map of Transit Gateway Routes to create"
+  type = map(object({
+    destination_cidr_block = string
+    transit_gateway_attachment_id = string
+    transit_gateway_route_table_id = string
+  }))
+  default = {}
+}
+
+variable "direct_connect_gateways" {
+  description = "Map of Direct Connect Gateways to create"
+  type = map(object({
+    name = string
+    amazon_side_asn = optional(number, 64512)
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "direct_connect_gateway_associations" {
+  description = "Map of Direct Connect Gateway Associations to create"
+  type = map(object({
+    dx_gateway_id = string
+    transit_gateway_id = string
+    allowed_prefixes = optional(list(string), [])
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "customer_gateways" {
+  description = "Map of Customer Gateways to create"
+  type = map(object({
+    bgp_asn = number
+    ip_address = string
+    certificate_arn = optional(string, null)
+    device_name = optional(string, null)
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "vpn_gateways" {
+  description = "Map of VPN Gateways to create"
+  type = map(object({
+    vpc_id = string
+    availability_zone = optional(string, null)
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "vpn_connections" {
+  description = "Map of VPN Connections to create"
+  type = map(object({
+    customer_gateway_id = string
+    transit_gateway_id = optional(string, null)
+    vpn_gateway_id = optional(string, null)
+    static_routes_only = optional(bool, false)
+    tunnel1_preshared_key = optional(string, null)
+    tunnel2_preshared_key = optional(string, null)
+    tunnel1_inside_ipv4_cidr = optional(string, null)
+    tunnel2_inside_ipv4_cidr = optional(string, null)
+    tunnel1_inside_ipv6_cidr = optional(string, null)
+    tunnel2_inside_ipv6_cidr = optional(string, null)
+    enable_acceleration = optional(bool, false)
+    local_ipv4_network_cidr = optional(string, null)
+    remote_ipv4_network_cidr = optional(string, null)
+    local_ipv6_network_cidr = optional(string, null)
+    remote_ipv6_network_cidr = optional(string, null)
+    tags = optional(map(string), {})
+  }))
+  default = {}
+}
+
+variable "vpn_connection_routes" {
+  description = "Map of VPN Connection Routes to create"
+  type = map(object({
+    destination_cidr_block = string
+    vpn_connection_id = string
+  }))
+  default = {}
+}
+
+variable "vpn_gateway_route_propagations" {
+  description = "Map of VPN Gateway Route Propagations to create"
+  type = map(object({
+    route_table_id = string
+    vpn_gateway_id = string
+  }))
+  default = {}
+}
+
+variable "vpn_gateway_attachments" {
+  description = "Map of VPN Gateway Attachments to create"
+  type = map(object({
+    vpc_id = string
+    vpn_gateway_id = string
+  }))
+  default = {}
+}
+
+variable "hybrid_monitoring_config" {
+  description = "Hybrid connectivity monitoring configuration"
+  type = object({
+    enable_cloudwatch_monitoring = optional(bool, true)
+    enable_cloudwatch_logs = optional(bool, true)
+    enable_cloudwatch_metrics = optional(bool, true)
+    enable_cloudwatch_alarms = optional(bool, true)
+    enable_cloudwatch_dashboard = optional(bool, true)
+    enable_cloudwatch_insights = optional(bool, false)
+    enable_cloudwatch_anomaly_detection = optional(bool, false)
+    enable_cloudwatch_rum = optional(bool, false)
+    enable_cloudwatch_evidently = optional(bool, false)
+    enable_cloudwatch_application_signals = optional(bool, false)
+    enable_cloudwatch_synthetics = optional(bool, false)
+    enable_cloudwatch_contributor_insights = optional(bool, false)
+    enable_cloudwatch_metric_streams = optional(bool, false)
+    enable_cloudwatch_metric_filters = optional(bool, false)
+    enable_cloudwatch_log_groups = optional(bool, true)
+    enable_cloudwatch_log_streams = optional(bool, true)
+    enable_cloudwatch_log_subscriptions = optional(bool, false)
+    enable_cloudwatch_log_insights = optional(bool, false)
+    enable_cloudwatch_log_metric_filters = optional(bool, false)
+    enable_cloudwatch_log_destinations = optional(bool, false)
+    enable_cloudwatch_log_queries = optional(bool, false)
+    enable_cloudwatch_log_analytics = optional(bool, false)
+    enable_cloudwatch_log_visualization = optional(bool, false)
+    enable_cloudwatch_log_reporting = optional(bool, false)
+    enable_cloudwatch_log_archiving = optional(bool, false)
+    enable_cloudwatch_log_backup = optional(bool, false)
+    enable_cloudwatch_log_retention = optional(bool, true)
+    enable_cloudwatch_log_encryption = optional(bool, true)
+    enable_cloudwatch_log_access_logging = optional(bool, false)
+    enable_cloudwatch_log_audit_logging = optional(bool, false)
+    enable_cloudwatch_log_compliance_logging = optional(bool, false)
+    enable_cloudwatch_log_security_logging = optional(bool, false)
+    enable_cloudwatch_log_performance_logging = optional(bool, true)
+    enable_cloudwatch_log_business_logging = optional(bool, false)
+    enable_cloudwatch_log_operational_logging = optional(bool, true)
+    enable_cloudwatch_log_debug_logging = optional(bool, false)
+    enable_cloudwatch_log_trace_logging = optional(bool, false)
+    enable_cloudwatch_log_error_logging = optional(bool, true)
+    enable_cloudwatch_log_warning_logging = optional(bool, true)
+    enable_cloudwatch_log_info_logging = optional(bool, true)
+    enable_cloudwatch_log_debug_logging = optional(bool, false)
+    enable_cloudwatch_log_verbose_logging = optional(bool, false)
+    enable_cloudwatch_log_silent_logging = optional(bool, false)
+  })
+  default = {}
+}
+
+variable "hybrid_security_config" {
+  description = "Hybrid connectivity security configuration"
+  type = object({
+    enable_encryption = optional(bool, true)
+    enable_access_control = optional(bool, true)
+    enable_audit_logging = optional(bool, true)
+    enable_compliance = optional(bool, false)
+    enable_governance = optional(bool, false)
+    enable_privacy = optional(bool, false)
+    enable_fairness = optional(bool, false)
+    enable_bias_detection = optional(bool, false)
+    enable_explainability = optional(bool, false)
+    enable_interpretability = optional(bool, false)
+    enable_robustness = optional(bool, false)
+    enable_adversarial_protection = optional(bool, false)
+    enable_poisoning_protection = optional(bool, false)
+    enable_extraction_protection = optional(bool, false)
+    enable_inversion_protection = optional(bool, false)
+    enable_membership_inference_protection = optional(bool, false)
+    enable_model_inversion_protection = optional(bool, false)
+    enable_attribute_inference_protection = optional(bool, false)
+    enable_property_inference_protection = optional(bool, false)
+    enable_reconstruction_protection = optional(bool, false)
+    enable_extraction_protection = optional(bool, false)
+    enable_stealing_protection = optional(bool, false)
+    enable_evasion_protection = optional(bool, false)
+    enable_poisoning_protection = optional(bool, false)
+    enable_backdoor_protection = optional(bool, false)
+    enable_trojan_protection = optional(bool, false)
+    enable_trigger_protection = optional(bool, false)
+  })
+  default = {}
+} 
