@@ -1,11 +1,57 @@
-# Example terraform.tfvars for Basic Transit Gateway Setup
+# Example configuration for Basic Transit Gateway setup
+# Copy this file to terraform.tfvars and modify the values as needed
 
-# AWS Configuration
+# ==============================================================================
+# Basic Configuration
+# ==============================================================================
+
+# AWS region for deployment
 aws_region = "us-west-2"
 
-# VPC Configuration
+# Environment name (e.g., dev, staging, prod)
+environment = "dev"
+
+# Project name for resource tagging
+project_name = "hybrid-connectivity"
+
+# VPC ID for the hybrid connectivity setup (REQUIRED)
+# This should be the ID of an existing VPC
 vpc_id = "vpc-12345678"
 
-# Environment Configuration
-environment  = "dev"
-project_name = "hybrid-connectivity" 
+# Resource ownership and billing
+owner = "devops-team"
+cost_center = "infrastructure"
+
+# ==============================================================================
+# VPN Configuration (Optional)
+# ==============================================================================
+
+# Enable VPN connectivity to on-premises
+enable_vpn = false
+
+# Public IP address of the on-premises VPN device
+# Required when enable_vpn = true
+on_premises_vpn_ip = "203.0.113.1"
+
+# Preshared keys for VPN tunnels (8-64 characters)
+# These should be strong, unique keys
+vpn_tunnel1_preshared_key = "your-secure-preshared-key-1"
+vpn_tunnel2_preshared_key = "your-secure-preshared-key-2"
+
+# Enable VPN connection logging to CloudWatch
+enable_vpn_logging = false
+
+# ==============================================================================
+# Direct Connect Configuration (Optional)
+# ==============================================================================
+
+# Enable Direct Connect connectivity
+enable_direct_connect = false
+
+# CIDR blocks allowed for Direct Connect route advertisement
+# These should be your on-premises network ranges
+direct_connect_allowed_prefixes = [
+  "10.0.0.0/8",
+  "172.16.0.0/12",
+  "192.168.0.0/16"
+] 

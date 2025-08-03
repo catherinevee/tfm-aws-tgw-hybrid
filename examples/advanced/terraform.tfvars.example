@@ -1,47 +1,148 @@
-# Example terraform.tfvars for Advanced Hybrid Connectivity Setup
+# Example configuration for Advanced Transit Gateway setup
+# Enterprise-grade hybrid connectivity with comprehensive features
+# Copy this file to terraform.tfvars and modify the values as needed
 
-# AWS Configuration
+# ==============================================================================
+# Basic Configuration
+# ==============================================================================
+
+# AWS region for deployment
 aws_region = "us-west-2"
 
-# VPC Configuration
+# Environment name (e.g., dev, staging, prod)
+environment = "prod"
+
+# Project name for resource tagging
+project_name = "enterprise-hybrid-connectivity"
+
+# VPC ID for the hybrid connectivity setup (REQUIRED)
+# This should be the ID of an existing VPC
 vpc_id = "vpc-12345678"
 
-# Environment Configuration
-environment  = "prod"
-project_name = "hybrid-connectivity"
+# Resource ownership and billing
+owner = "enterprise-ops"
+cost_center = "enterprise-infrastructure"
 
+# Data classification and compliance
+data_classification = "confidential"
+compliance_requirements = "SOC2"
+
+# ==============================================================================
 # Transit Gateway Configuration
+# ==============================================================================
+
+# Private ASN for Transit Gateway (64512-65534)
 transit_gateway_asn = 64512
 
+# Enable multicast support (for enterprise applications)
+enable_multicast = false
+
+# Enable appliance mode for load balancer integration
+enable_appliance_mode = false
+
+# Enable IPv6 support
+enable_ipv6 = false
+
+# ==============================================================================
 # Direct Connect Configuration
+# ==============================================================================
+
+# Enable Direct Connect for dedicated connectivity
 enable_direct_connect = true
+
+# Private ASN for Direct Connect Gateway
 direct_connect_gateway_asn = 64512
+
+# CIDR blocks allowed for Direct Connect route advertisement
+# These should be your on-premises network ranges
 direct_connect_allowed_prefixes = [
-  "10.0.0.0/16",
+  "10.0.0.0/8",
+  "172.16.0.0/12",
+  "192.168.0.0/16"
+]
+
+# ==============================================================================
+# VPN Configuration
+# ==============================================================================
+
+# Enable VPN connectivity to on-premises
+enable_vpn = true
+
+# Primary VPN device IP address
+primary_vpn_ip = "203.0.113.1"
+
+# Customer Gateway BGP ASN (on-premises device)
+customer_gateway_bgp_asn = 65000
+
+# Customer Gateway IP address (legacy)
+customer_gateway_ip_address = "203.0.113.1"
+
+# Use static routes only (false = BGP preferred)
+vpn_static_routes_only = false
+
+# Static routes for VPN (if using static routing)
+vpn_static_routes = [
+  "10.0.0.0/8",
   "172.16.0.0/12"
 ]
 
-# VPN Configuration
-enable_vpn = true
-customer_gateway_bgp_asn = 65000
-customer_gateway_ip_address = "203.0.113.1"
-vpn_static_routes_only = false
-vpn_static_routes = []
+# Preshared keys for VPN tunnels (8-64 characters)
+# These should be strong, unique keys for enterprise security
+primary_vpn_tunnel1_preshared_key = "your-enterprise-secure-preshared-key-1"
+primary_vpn_tunnel2_preshared_key = "your-enterprise-secure-preshared-key-2"
 
-# VPN Preshared Keys (Replace with your actual keys)
-vpn_tunnel1_preshared_key = "your-preshared-key-1"
-vpn_tunnel2_preshared_key = "your-preshared-key-2"
+# Legacy preshared keys (for backward compatibility)
+vpn_tunnel1_preshared_key = "your-legacy-secure-preshared-key-1"
+vpn_tunnel2_preshared_key = "your-legacy-secure-preshared-key-2"
 
+# ==============================================================================
 # VPN Logging Configuration
+# ==============================================================================
+
+# Enable VPN connection logging to CloudWatch
 enable_vpn_logging = true
+
+# Number of days to retain VPN connection logs
 vpn_log_retention_days = 30
 
+# ==============================================================================
 # Route Configuration
+# ==============================================================================
+
+# Complex route configuration for enterprise networks
 transit_gateway_routes = [
   {
-    cidr_block = "10.0.0.0/16"
+    cidr_block = "10.0.0.0/16"  # Main VPC CIDR
   },
   {
-    cidr_block = "172.16.0.0/12"
+    cidr_block = "172.16.0.0/12" # Secondary VPC CIDR
+  },
+  {
+    cidr_block = "192.168.0.0/16" # On-premises network
   }
-] 
+]
+
+# ==============================================================================
+# Enterprise Features Configuration
+# ==============================================================================
+
+# Enable backup features for disaster recovery
+enable_backup = true
+
+# Enable disaster recovery features
+enable_disaster_recovery = true
+
+# Enable CloudWatch Insights for advanced monitoring
+enable_cloudwatch_insights = false
+
+# Enable CloudWatch anomaly detection
+enable_anomaly_detection = false
+
+# Enable compliance features
+enable_compliance = true
+
+# Enable governance features
+enable_governance = true
+
+# Enable privacy features
+enable_privacy = true 
